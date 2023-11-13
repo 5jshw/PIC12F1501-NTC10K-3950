@@ -1,0 +1,27 @@
+make -f nbproject/Makefile-defaultActiveCA.mk SUBPROJECTS= .clean-conf
+make[1]: Entering directory 'D:/PIC12/T1'
+rm -f  -r .ca/build/defaultActiveCA/production
+rm -f  -r .ca/dist/defaultActiveCA/production
+make[1]: Leaving directory 'D:/PIC12/T1'
+[32m«Â≥˝“—≥…π¶ (◊‹ ±º‰£∫ 165ms)[0m
+make -f nbproject/Makefile-defaultActiveCA.mk SUBPROJECTS= .build-conf
+make[1]: Entering directory 'D:/PIC12/T1'
+make  -f nbproject/Makefile-defaultActiveCA.mk .ca/dist/defaultActiveCA/production/T1.production.hex
+make[2]: Entering directory 'D:/PIC12/T1'
+"C:\XC8\bin\xc8-cc.exe"  -mcpu=12F1501 -c   -mdfp="C:/Program Files/Microchip/MPLABX/v6.15/packs/Microchip/PIC12-16F1xxx_DFP/1.6.241/xc8"  -fno-short-double -fno-short-float -O0 -fasmfile -maddrqual=ignore -xassembler-with-cpp -mwarn=-3 -Wa,-a -DXPRJ_defaultActiveCA=defaultActiveCA  -msummary=-psect,-class,+mem,-hex,-file  -ginhx32 -Wl,--data-init -mno-keep-startup -mno-osccal -mno-resetbits -mno-save-resetbits -mno-download -mno-stackcall -mno-default-config-bits   -std=c99 -gdwarf-3 -mstack=compiled:auto:auto     -o .ca/build/defaultActiveCA/production/main.p1 main.c 
+main.c:60:56: warning: implicit conversion changes signedness: 'int' to 'unsigned int' [-Wsign-conversion]
+            ad1 = ((ADRESH << 2) | (ADRESL >> 6)) * 78 / 100;  // <BD><AB>AD<BD><E1><B9><FB><BA><U+03F2><A2><BA><F3><CB><F5><B7><U+0175><BD><B6><D4><U+04E6><B5><U+0137><B6><U+03A7>
+                ~ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~
+1 warning generated.
+"C:\XC8\bin\xc8-cc.exe"  -mcpu=12F1501 -Wl,-Map=.ca/dist/defaultActiveCA/production/T1.production.map  -DXPRJ_defaultActiveCA=defaultActiveCA  -Wl,--defsym=__MPLAB_BUILD=1   -mdfp="C:/Program Files/Microchip/MPLABX/v6.15/packs/Microchip/PIC12-16F1xxx_DFP/1.6.241/xc8"  -fno-short-double -fno-short-float -O0 -fasmfile -maddrqual=ignore -xassembler-with-cpp -mwarn=-3 -Wa,-a -msummary=-psect,-class,+mem,-hex,-file  -ginhx32 -Wl,--data-init -mno-keep-startup -mno-osccal -mno-resetbits -mno-save-resetbits -mno-download -mno-stackcall -mno-default-config-bits -std=c99 -gdwarf-3 -mstack=compiled:auto:auto      -Wl,--memorysummary,.ca/dist/defaultActiveCA/production/memoryfile.xml -o .ca/dist/defaultActiveCA/production/T1.production.elf  .ca/build/defaultActiveCA/production/main.p1     
+
+Memory Summary:
+    Program space        used    DDh (   221) of   400h words   ( 21.6%)
+    Data space           used    19h (    25) of    40h bytes   ( 39.1%)
+    EEPROM space         None available
+    Configuration bits   used     2h (     2) of     2h words   (100.0%)
+    ID Location space    used     0h (     0) of     4h bytes   (  0.0%)
+
+make[2]: Leaving directory 'D:/PIC12/T1'
+make[1]: Leaving directory 'D:/PIC12/T1'
+[32m±‡“Î“—≥…π¶ (◊‹ ±º‰£∫ 1s)[0m
