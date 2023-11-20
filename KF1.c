@@ -5,13 +5,7 @@
 void setup(void) 
 {
     OSCCON = 0b01110000;  // 设置振荡器为8MHz
-/*
-    // 配置输入信号引脚
-    T1 = 0;    // T1为输入
-    T_T1 = 1;  // 设置T1为输入引脚
-    D1 = 0;    // D1为输入
-    T_D1 = 1;  // 设置D1为输入引脚
-*/
+
     // 配置输出信号引脚
     B1 = 0;    // B1为输出
     T_B1 = 0;  // 设置B1为输出引脚
@@ -33,7 +27,7 @@ void PWMinit(void)
     TRISAbits.TRISA2 = 1;       //禁止输出
     PWM1CON = 0x00;             //清零
     PWM1CONbits.PWM1POL = 0;    //高电平有效
-    PR2 = 150;                 //设定周期
+    PR2 = 200;                 //设定周期
     PWM1DCH = 0x00;             //清零PWM高位
     PWM1DCL = 0x00;             //清零PWM低位
     INTCONbits.GIE = 1;         //开总中断

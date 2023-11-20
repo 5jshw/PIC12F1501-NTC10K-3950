@@ -25,15 +25,10 @@
 #pragma config LVP = OFF        // Low-Voltage Programming Enable (High-voltage on MCLR/VPP must be used for programming)
 
 #define _XTAL_FREQ 8000000
-/*
-#define T1      PORTAbits.RA0
-#define T_T1    TRISAbits.TRISA0
 
-#define D1      PORTAbits.RA4
-#define T_D1    TRISAbits.TRISA4
-*/
 #define B1      PORTAbits.RA1
 #define T_B1    TRISAbits.TRISA1
+
 void setup(void);
 void PWMinit(void);
 #endif	/* KF1_H */

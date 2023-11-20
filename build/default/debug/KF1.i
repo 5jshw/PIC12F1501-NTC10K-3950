@@ -3831,7 +3831,12 @@ extern __bank0 __bit __timeout;
 #pragma config BORV = LO
 #pragma config LPBOR = OFF
 #pragma config LVP = OFF
-# 37 "./KF1.h"
+
+
+
+
+
+
 void setup(void);
 void PWMinit(void);
 # 3 "KF1.c" 2
@@ -3840,7 +3845,8 @@ void PWMinit(void);
 void setup(void)
 {
     OSCCON = 0b01110000;
-# 16 "KF1.c"
+
+
     PORTAbits.RA1 = 0;
     TRISAbits.TRISA1 = 0;
 
@@ -3861,7 +3867,7 @@ void PWMinit(void)
     TRISAbits.TRISA2 = 1;
     PWM1CON = 0x00;
     PWM1CONbits.PWM1POL = 0;
-    PR2 = 150;
+    PR2 = 200;
     PWM1DCH = 0x00;
     PWM1DCL = 0x00;
     INTCONbits.GIE = 1;
