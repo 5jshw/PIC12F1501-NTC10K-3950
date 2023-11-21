@@ -1,14 +1,12 @@
 #include <xc.h>
 #include "KF1.h"
 
-unsigned int getADCValue(unsigned char channel);
-unsigned int getADS(void);
-void __interrupt() ISR(void);
-unsigned long ad1;      // ad1, ad2：AD转换寄存器
-unsigned int ad2;
-int t, v, i;                //t 电位器转换设定温度值， v NTC转换实际温度值， i 温度表查表指示器
-unsigned long VR, Rt;           //VR 当前电压值
-//unsigned int Rt;            //Rt 当前动态电阻值
+unsigned int getADCValue(unsigned char channel);        //单次AD转换
+unsigned int getADS(void);                              //多次AD转换
+void __interrupt() ISR(void);                           //中断处理函数
+
+int t;
+unsigned long Rt;                                   //VR 当前电压值
 unsigned int const TABLE[] = {9712, 9166, 8654, 8172, 7722, 7298, 6900, 6526, 6176, 5534, 5242, 4966, 4708, 4464, 4234, 4016, 3812, 3620, 3438, 3266, 
                               3104, 2950, 2806, 2668, 2540, 2418, 2302, 2192, 2088, 1990, 1897, 1809, 1726, 1646, 1571, 1500, 1432, 1368, 1307, 1249, 
                               1194, 1142, 1092, 1045, 1000, 957, 916, 877, 840, 805, 772, 740, 709, 680, 653, 626, 601, 577, 554, 532, 511, 491, 472, 
@@ -17,60 +15,58 @@ unsigned int const TABLE[] = {9712, 9166, 8654, 8172, 7722, 7298, 6900, 6526, 61
 
 void main(void) 
 {
-    int add = 0;
-    setup();        //AD转换初始化函数调用，原函数位于KF1.c
-    PWMinit();      //PWM初始化函数调用，原函数位于KF1.c
-    __delay_ms(2000);
-    while (1)
+    char add = 0;       //电位器的采样频率
+    unsigned long ad1;  //ad1  NTC
+    unsigned int ad2;   //ad2  电位器
+    setup();            //AD转换初始化函数调用，原函数位于KF1.c
+    PWMinit();          //PWM初始化函数调用，原函数位于KF1.c
+    __delay_ms(2000);   //缓冲期
+    
+    while (1)           //主循环
     {
-        if(add == 3)
+        if(add == 3)                        //错开两路AD转换的频率
         {
+            unsigned long VR;
             ad1 = getADCValue(0x00);        //AD接口感应的AD值
-            ad1 = 1024 - ad1;           //由于NTC位于测温电路下端，所以温度升高时，电压下降，电阻上升。因此，将AD值反向处理
-            VR = ad1 * 500 / 1024;      //转换成电压值
+            ad1 = 1024 - ad1;               //由于NTC位于测温电路下端，所以温度升高时，电压下降，电阻上升。因此，将AD值反向处理
+            VR = ad1 * 500 / 1024;          //转换成电压值
             Rt = (unsigned long)(500 - VR) * 1000 / VR;      //计算NTC当前的动态电阻值
-            ad2 = getADS();        //电位器设定温度
-            t = ad2 / 12;               //1024 / 12 = 85
-            add = 0;
+            add = 0;                        //重置AD识别指示器
         }
         else
         {
-            ad2 = getADS();        //电位器设定温度
-            t = ad2 / 12;               //1024 / 12 = 85
-            add++;
+            ad2 = getADS();                 //获取电位器AD值
+            //t = (int)((float)(ad2) / 12.8);                   //1024 / 12 = 85
+            t = (int)(ad2 / 12);
+            add++;                          //AD识别指示器
         }
     }
 }
 
-unsigned int getADCValue(unsigned char channel)     //AD转换函数
+unsigned int getADCValue(unsigned char channel)            //AD转换函数
 {
-    int acc;
-    ADRESH = 0;                     //AD转换结果高位清零
-    ADRESL = 0;                     //AD转换结果低位清零
-    ADCON0bits.CHS = channel;       //选择AD通道
-    __delay_ms(5);                  //改变AD通道后，需延时稳定
-    ADCON0bits.GO = 1;              //开始AD转换
-    while (ADCON0bits.GO);          //转换完成指示
-    acc = ADRESH;
-    return (unsigned int)((acc << 2) | (ADRESL >> 6));    //返回高低位合并后的AD值
+    ADCON0bits.CHS = channel;                               //选择AD通道
+    __delay_ms(5);                                          //改变AD通道后，需延时稳定
+    ADCON0bits.GO = 1;                                      //开始AD转换
+    while (ADCON0bits.GO);                                  //转换完成指示
+    return (unsigned int)((ADRESH << 2) | (ADRESL >> 6));   //返回高低位合并后的AD值
 }
 
-unsigned int getADS(void)
+unsigned int getADS(void)               //多次AD转换函数
 {
-    unsigned int ac1, ac2, ac3, acd;
+    unsigned int ac1, ac2, ac3, acd;    //预留变量，替代数组
     ac1 = getADCValue(0x03);
     __delay_us(5);
     ac2 = getADCValue(0x03);
     __delay_us(5);
     ac3 = getADCValue(0x03);
     __delay_us(5);
-    acd = (ac1 + ac2 + ac3) / 3;
-    return acd;
+    return ((ac1 + ac2 + ac3) / 3);        //稳定数据
 }
 
 void __interrupt() ISR(void)            //中断处理函数
 {
-    short p;                            //p PWM增减指示器
+    signed char v, i, p;                //p PWM增减指示器
     if(PIR1bits.TMR2IF == 1)			//检测时钟2是否溢出中断
 	{
 		PIE1bits.TMR2IE = 0;			//禁止时钟2溢出中断
@@ -88,19 +84,19 @@ void __interrupt() ISR(void)            //中断处理函数
         {
             PWM1DCH++;
         }
-        else if(p == -1)
+        else if(p == -1)                //PWM递减
         {
             PWM1DCH--;
         }
         TMR2 = 0x00;                    //重置时钟2的计时
-		PIE1bits.TMR2IE = 1;			//允许时钟2溢出中断
 		T2CONbits.TMR2ON = 1;           //开启时钟2
+        PIE1bits.TMR2IE = 1;			//允许时钟2溢出中断
     }
     
-    if(PIR1bits.ADIF == 1)         //检查AD是否发生中断
+    if(PIR1bits.ADIF == 1)              //检查AD是否发生中断
     {
-        PIE1bits.ADIE = 0;              //禁止中断发生，清除中断标志
-        PIR1bits.ADIF = 0;
+        PIE1bits.ADIE = 0;              //禁止中断发生
+        PIR1bits.ADIF = 0;              //清除中断标志
         
         if(ADCON0bits.CHS == 0x00)      //判断发生中断的AD通道，这里是NTC
         {
@@ -115,17 +111,16 @@ void __interrupt() ISR(void)            //中断处理函数
         }
         else if(ADCON0bits.CHS == 0x03) //判断发生中断的AD通道，这里是电位器
         {
-            if(v <= (t - 2))                  //当实际温度小于等于设定温度 - 2， 设定回差，避免温度临界跳动
+            if(v <= (t - 2))            //当实际温度小于等于设定温度 - 2， 设定回差，避免温度临界跳动
             {
                 B1 = 1;                 //点亮报警灯
-                PIE1bits.TMR2IE = 0;
-                PWM1DCH = PR2;
+                PIE1bits.TMR2IE = 0;    //关闭时钟2，暂停中断
+                PWM1DCH = PR2;          //使呼吸灯常亮
             }
-            else if(v > t)        //当实际温度大于设定温度
+            else if(v > t)              //当实际温度大于设定温度
             {
                 B1 = 0;                 //关闭报警灯
-                PIE1bits.TMR2IE = 1;
-
+                PIE1bits.TMR2IE = 1;    //开启时钟2，启用中断
             }
         }
         PIE1bits.ADIE = 1;              //一次中断执行完毕，允许中断继续发生

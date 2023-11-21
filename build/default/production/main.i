@@ -3857,7 +3857,7 @@ unsigned int const TABLE[] = {9712, 9166, 8654, 8172, 7722, 7298, 6900, 6526, 61
 
 void main(void)
 {
-    int add = 0;
+    char add = 0;
     setup();
     PWMinit();
     _delay((unsigned long)((2000)*(8000000/4000.0)));
@@ -3869,15 +3869,12 @@ void main(void)
             ad1 = 1024 - ad1;
             VR = ad1 * 500 / 1024;
             Rt = (unsigned long)(500 - VR) * 1000 / VR;
-            ad2 = getADS();
-            t = ad2 / 12;
             add = 0;
         }
         else
         {
             ad2 = getADS();
             t = ad2 / 12;
-
             add++;
         }
     }
@@ -3885,15 +3882,11 @@ void main(void)
 
 unsigned int getADCValue(unsigned char channel)
 {
-    int acc;
-    ADRESH = 0;
-    ADRESL = 0;
     ADCON0bits.CHS = channel;
     _delay((unsigned long)((5)*(8000000/4000.0)));
     ADCON0bits.GO = 1;
     while (ADCON0bits.GO);
-    acc = ADRESH;
-    return (unsigned int)((acc << 2) | (ADRESL >> 6));
+    return (unsigned int)((ADRESH << 2) | (ADRESL >> 6));
 }
 
 unsigned int getADS(void)
@@ -3934,8 +3927,8 @@ void __attribute__((picinterrupt(("")))) ISR(void)
             PWM1DCH--;
         }
         TMR2 = 0x00;
-  PIE1bits.TMR2IE = 1;
   T2CONbits.TMR2ON = 1;
+        PIE1bits.TMR2IE = 1;
     }
 
     if(PIR1bits.ADIF == 1)
