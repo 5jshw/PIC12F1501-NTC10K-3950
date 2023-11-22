@@ -3844,11 +3844,9 @@ void PWMinit(void);
 unsigned int getADCValue(unsigned char channel);
 unsigned int getADS(void);
 void __attribute__((picinterrupt(("")))) ISR(void);
-unsigned long ad1;
-unsigned int ad2;
-int t, v, i;
-unsigned long VR, Rt;
 
+int t;
+unsigned long Rt;
 unsigned int const TABLE[] = {9712, 9166, 8654, 8172, 7722, 7298, 6900, 6526, 6176, 5534, 5242, 4966, 4708, 4464, 4234, 4016, 3812, 3620, 3438, 3266,
                               3104, 2950, 2806, 2668, 2540, 2418, 2302, 2192, 2088, 1990, 1897, 1809, 1726, 1646, 1571, 1500, 1432, 1368, 1307, 1249,
                               1194, 1142, 1092, 1045, 1000, 957, 916, 877, 840, 805, 772, 740, 709, 680, 653, 626, 601, 577, 554, 532, 511, 491, 472,
@@ -3858,13 +3856,17 @@ unsigned int const TABLE[] = {9712, 9166, 8654, 8172, 7722, 7298, 6900, 6526, 61
 void main(void)
 {
     char add = 0;
+    unsigned long ad1;
+    unsigned int ad2;
     setup();
     PWMinit();
     _delay((unsigned long)((2000)*(8000000/4000.0)));
+
     while (1)
     {
         if(add == 3)
         {
+            unsigned long VR;
             ad1 = getADCValue(0x00);
             ad1 = 1024 - ad1;
             VR = ad1 * 500 / 1024;
@@ -3874,7 +3876,9 @@ void main(void)
         else
         {
             ad2 = getADS();
-            t = ad2 / 12;
+
+
+            t = (int)(ad2 * 10 / 128);
             add++;
         }
     }
@@ -3898,13 +3902,12 @@ unsigned int getADS(void)
     _delay((unsigned long)((5)*(8000000/4000000.0)));
     ac3 = getADCValue(0x03);
     _delay((unsigned long)((5)*(8000000/4000000.0)));
-    acd = (ac1 + ac2 + ac3) / 3;
-    return acd;
+    return ((ac1 + ac2 + ac3) / 3);
 }
 
 void __attribute__((picinterrupt(("")))) ISR(void)
 {
-    short p;
+    signed char v, i, p;
     if(PIR1bits.TMR2IF == 1)
  {
   PIE1bits.TMR2IE = 0;
@@ -3959,7 +3962,6 @@ void __attribute__((picinterrupt(("")))) ISR(void)
             {
                 PORTAbits.RA1 = 0;
                 PIE1bits.TMR2IE = 1;
-
             }
         }
         PIE1bits.ADIE = 1;

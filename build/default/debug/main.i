@@ -3844,7 +3844,6 @@ void PWMinit(void);
 unsigned int getADCValue(unsigned char channel);
 unsigned int getADS(void);
 void __attribute__((picinterrupt(("")))) ISR(void);
-
 int t;
 unsigned long Rt;
 unsigned int const TABLE[] = {9712, 9166, 8654, 8172, 7722, 7298, 6900, 6526, 6176, 5534, 5242, 4966, 4708, 4464, 4234, 4016, 3812, 3620, 3438, 3266,
@@ -3852,6 +3851,17 @@ unsigned int const TABLE[] = {9712, 9166, 8654, 8172, 7722, 7298, 6900, 6526, 61
                               1194, 1142, 1092, 1045, 1000, 957, 916, 877, 840, 805, 772, 740, 709, 680, 653, 626, 601, 577, 554, 532, 511, 491, 472,
                               454, 436, 420, 404, 388, 374, 360, 346, 334, 321, 309, 298, 287, 277, 267, 258, 248
                              };
+
+unsigned long const TABLE2[] = {99102, 93450, 88156, 83195, 78544, 74183, 70091, 66250, 66643, 59255,
+                                56071, 53078, 50263, 47614, 45121, 42774, 40563, 38480, 36517, 34665,
+                                32919,
+                                31270, 29715, 28246, 26858, 25547, 24307, 23135, 22026, 20977, 19987,
+                             19044, 18154, 17310, 16510, 15752, 15034, 14352, 13705, 13090, 12507,
+                             11953, 11427, 10927, 10452, 10000, 9570, 9161, 8771, 8401, 8048,
+                             7712, 7391, 7086, 6795, 6518, 6254, 6001, 5761, 5531, 5311,
+                             5102, 4902, 4710, 4528, 4353, 4186, 4026, 3874, 3728, 3588,
+                             3454, 3326, 3203, 3085, 2973, 2865, 2761, 2662, 2567, 2476,
+                               };
 
 void main(void)
 {
@@ -3876,8 +3886,7 @@ void main(void)
         else
         {
             ad2 = getADS();
-
-            t = (int)(ad2 / 12);
+            t = (int)(ad2 * 10 / 128);
             add++;
         }
     }
@@ -3894,14 +3903,13 @@ unsigned int getADCValue(unsigned char channel)
 
 unsigned int getADS(void)
 {
-    unsigned int ac1, ac2, ac3, acd;
-    ac1 = getADCValue(0x03);
-    _delay((unsigned long)((5)*(8000000/4000000.0)));
-    ac2 = getADCValue(0x03);
-    _delay((unsigned long)((5)*(8000000/4000000.0)));
-    ac3 = getADCValue(0x03);
-    _delay((unsigned long)((5)*(8000000/4000000.0)));
-    return ((ac1 + ac2 + ac3) / 3);
+    unsigned int ac[4], m;
+    for(m = 0; m < 3; m++)
+    {
+        ac[m] = getADCValue(0x03);
+        ac[3] += ac[m];
+    }
+    return ac[3] / 3;
 }
 
 void __attribute__((picinterrupt(("")))) ISR(void)

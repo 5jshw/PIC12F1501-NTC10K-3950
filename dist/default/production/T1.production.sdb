@@ -9,6 +9,8 @@
 [v ___lwdiv __lwdiv `(ui  1 e 2 0 ]
 "10 C:\XC8\pic\sources\c99\common\sprcadd.c
 [v ___fladd __fladd `(d  1 e 4 0 ]
+"15 C:\XC8\pic\sources\c99\common\Umul16.c
+[v ___wmul __wmul `(ui  1 e 2 0 ]
 "15 C:\XC8\pic\sources\c99\common\Umul32.c
 [v ___lmul __lmul `(ul  1 e 4 0 ]
 "4 C:\XC8\pic\sources\c99\common\Umul8_16.c
@@ -17,13 +19,13 @@
 [v _setup setup `(v  1 e 1 0 ]
 "25
 [v _PWMinit PWMinit `(v  1 e 1 0 ]
-"18 D:\PIC12\T1\main.c
+"16 D:\PIC12\T1\main.c
 [v _main main `(v  1 e 1 0 ]
-"43
+"47
 [v _getADCValue getADCValue `(ui  1 e 2 0 ]
-"52
+"56
 [v _getADS getADS `(ui  1 e 2 0 ]
-"65
+"68
 [v _ISR ISR `II(v  1 e 1 0 ]
 [s S317 . 1 `uc 1 IOCIF 1 0 :1:0 
 `uc 1 INTF 1 0 :1:1 
@@ -151,61 +153,69 @@
 "3003
 [u S305 . 1 `S299 1 . 1 0 ]
 [v _PWM1CONbits PWM1CONbits `VES305  1 e 1 @1555 ]
-"7 D:\PIC12\T1\main.c
-[v _ad1 ad1 `ul  1 e 4 0 ]
-"8
-[v _ad2 ad2 `ui  1 e 2 0 ]
-"9
+"8 D:\PIC12\T1\main.c
 [v _t t `i  1 e 2 0 ]
-[v _v v `i  1 e 2 0 ]
-[v _i i `i  1 e 2 0 ]
-"10
-[v _VR VR `ul  1 e 4 0 ]
+"9
 [v _Rt Rt `ul  1 e 4 0 ]
-"12
+"10
 [v _TABLE TABLE `DC[80]ui  1 e 160 0 ]
-"18
+"16
 [v _main main `(v  1 e 1 0 ]
 {
+"29
+[v main@VR VR `ul  1 a 4 33 ]
+"19
+[v main@ad1 ad1 `ul  1 a 4 37 ]
 "20
-[v main@add add `uc  1 a 1 30 ]
-"41
+[v main@ad2 ad2 `ui  1 a 2 30 ]
+"18
+[v main@add add `uc  1 a 1 32 ]
+"45
 } 0
 "5 D:\PIC12\T1\KF1.c
 [v _setup setup `(v  1 e 1 0 ]
 {
 "23
 } 0
-"52 D:\PIC12\T1\main.c
+"56 D:\PIC12\T1\main.c
 [v _getADS getADS `(ui  1 e 2 0 ]
 {
-"54
-[v getADS@acd acd `ui  1 a 2 20 ]
+"58
 [v getADS@ac3 ac3 `ui  1 a 2 18 ]
 [v getADS@ac2 ac2 `ui  1 a 2 16 ]
 [v getADS@ac1 ac1 `ui  1 a 2 14 ]
-"63
+"66
 } 0
-"43
+"47
 [v _getADCValue getADCValue `(ui  1 e 2 0 ]
 {
 [v getADCValue@channel channel `uc  1 a 1 wreg ]
 [v getADCValue@channel channel `uc  1 a 1 wreg ]
-"45
+"49
 [v getADCValue@channel channel `uc  1 a 1 9 ]
-"50
+"54
 } 0
 "5 C:\XC8\pic\sources\c99\common\lwdiv.c
 [v ___lwdiv __lwdiv `(ui  1 e 2 0 ]
 {
 "10
-[v ___lwdiv@quotient quotient `ui  1 a 2 6 ]
+[v ___lwdiv@quotient quotient `ui  1 a 2 5 ]
 "11
-[v ___lwdiv@counter counter `uc  1 a 1 5 ]
+[v ___lwdiv@counter counter `uc  1 a 1 7 ]
 "5
 [v ___lwdiv@divisor divisor `ui  1 p 2 0 ]
 [v ___lwdiv@dividend dividend `ui  1 p 2 2 ]
 "30
+} 0
+"15 C:\XC8\pic\sources\c99\common\Umul16.c
+[v ___wmul __wmul `(ui  1 e 2 0 ]
+{
+"17
+[v ___wmul@product product `ui  1 a 2 4 ]
+"15
+[v ___wmul@multiplier multiplier `ui  1 p 2 0 ]
+[v ___wmul@multiplicand multiplicand `ui  1 p 2 2 ]
+"53
 } 0
 "15 C:\XC8\pic\sources\c99\common\Umul32.c
 [v ___lmul __lmul `(ul  1 e 4 0 ]
@@ -234,10 +244,12 @@
 {
 "42
 } 0
-"65 D:\PIC12\T1\main.c
+"68 D:\PIC12\T1\main.c
 [v _ISR ISR `II(v  1 e 1 0 ]
 {
-"67
-[v ISR@p p `s  1 a 2 4 ]
-"127
+"70
+[v ISR@i i `c  1 a 1 8 ]
+[v ISR@p p `c  1 a 1 7 ]
+[v ISR@v v `c  1 a 1 6 ]
+"129
 } 0
